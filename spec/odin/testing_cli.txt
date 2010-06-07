@@ -1,0 +1,95 @@
+describe "goto" do
+  before do
+    FakeFS.activate!
+  end
+
+  # do file system stuff
+
+  after do
+    FakeFS::FileSystem.clear
+    FakeFS.deactivate!
+  end
+
+
+def capture_stdout(&block)
+  original_stdout = $stdout
+  $stdout = fake = StringIO.new
+  begin
+    yield
+  ensure
+    $stdout = original_stdout
+  end
+ fake.string
+end
+
+def executing_a_signal
+  capture_stdout { a_method(a_signal.new, a_model, a_helper) }
+  assert_equal(new_state, a_model.state)
+end
+
+require 'open3'
+
+# call system commands and capture all output
+Open3.popen3(cmd) do |stdin, stdout, stderr| 
+  
+end
+
+# Shell Session gem
+# http://github.com/ahoward/session
+
+require 'session'
+
+shell = Session::Shell.new
+
+stdout, stderr = shell.execute 'ls'
+status = shell.status
+
+stdout, stderr = '', ''
+shell.execute 'ls', :stdout => stdout, :stderr => stderr
+status = shell.status
+
+shell.outproc = lambda{|out| puts "#{ out }"}
+shell.errproc = lambda{|err| raise err}
+shell.execute('while test 1; do echo 42; sleep 1; done') #=> 42 ... 42 ... 42
+
+
+#http://github.com/ahoward/open4 is an alternative that handles pid and exit status
+#http://github.com/ahoward/session a more fleshed our shell utility
+require 'open3'
+ 
+Open3.popen3("dc") do |stdin, stdout, stderr|
+  t = Thread.new(stderr) do |terr|
+    while (line = terr.gets)
+      puts "stderr: #{line}"
+    end
+  end
+  
+  puts "pushing 5 to stack"
+  stdin.puts(5)
+  puts "pushing 10 to stack"
+  stdin.puts(10)
+  puts "pushing + to stack"
+  stdin.puts("+")
+  puts "sending print command"
+  stdin.puts("p")
+  result = stdout.gets
+  puts "stdout: #{ result }"
+  
+  puts "\ntrying an unsupported command"
+  stdin.puts("b")
+
+
+  extra_info_not_in_stderror = stdout.gets
+  puts "stdout: #{extra_info_not_in_stderror}"
+
+ 
+  puts "\nclosing stdin to avoid deadlock with stderr"
+  stdin.close
+
+  # puts "let's give stderr a chance to run"
+  # t.run or sleep 1
+  
+  puts "joining"
+  t.join
+end
+

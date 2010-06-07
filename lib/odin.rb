@@ -1,2 +1,1 @@
-
-require 'odin/odin'
+require 'odin/all'

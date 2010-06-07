@@ -124,8 +124,8 @@ framework:
         
 ## Design ##
 
-In phase I, the project should maintain a simple list o YAML files, one file for each gem. 
-On install, these signatures are copied into ~/odin/signatures
+In phase I, the project should maintain a simple list of YAML files, one file for each gem. 
+On install, these signatures are copied into <code>~/odin/signatures</code>
 You can copy you own signatures for your own projects in here as well.
 
 signatures<pre><code>- rails_2.3.5.yaml   
@@ -198,7 +198,7 @@ Odin is simply installed as a gem.
 Odin has the following commands:
 
 - cache
-- list/earch
+- list (alias: search)
 - exec
 - goto
 - open

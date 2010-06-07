@@ -19,5 +19,21 @@ module Hello
         named.name.should be == "blip"
       end      
     end
+    
+    describe "my rake script" do
+      before do
+        FakeFS.activate!
+      end
+    
+      it "should create a file abc" do
+        # create a file
+        File.should exist("/abc")
+      end
+    
+      after do
+        FakeFS::FileSystem.clear
+        FakeFS.deactivate!
+      end
+    end    
   end
 end
